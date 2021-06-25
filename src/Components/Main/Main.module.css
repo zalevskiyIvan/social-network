@@ -1,0 +1,50 @@
+.newRecipe {
+  display: flex;
+  width: 50%;
+  height: 60px;
+  background-color: #181a1b;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 8%;
+}
+.h1 {
+  color: #b8b4ad;
+  margin-top: 5px;
+  margin-left: 12px;
+}
+
+.plus {
+  color: #837f78;
+  margin-left: 4%;
+  margin-top: 1%;
+}
+
+.post {
+  background-color: rgb(44, 44, 44);
+  color: white;
+  width: 50%;
+  border-radius: 13px;
+  margin-left: 8%;
+  padding-bottom: 1px;
+}
+.post img {
+  width: 90%;
+  height: 80%;
+  border-radius: 30px;
+}
+.form {
+  box-shadow: 7px 7px 31px 5px rgba(32, 54, 59, 0.2);
+  width: 50%;
+  margin: 0px auto;
+  padding-bottom: 1%;
+  padding-top: 1%;
+  margin-top: 1%;
+  border-radius: 13px;
+}
+.input {
+  margin-top: 1%;
+}
+.error {
+  color: red;
+}

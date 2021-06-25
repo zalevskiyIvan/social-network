@@ -1,0 +1,15 @@
+.auth {
+  width: 80%;
+  margin: auto;
+  margin-top: 5%;
+  box-shadow: 7px 7px 31px 5px rgba(32, 54, 59, 0.2);
+  text-align: center;
+  background-color: #ffffff;
+  color: rgb(41, 44, 44);
+}
+.auth div {
+  margin-bottom: 0.5%;
+}
+.input {
+  width: 50%;
+}
