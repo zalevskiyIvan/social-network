@@ -6,6 +6,7 @@ import { useSelector } from "../../common/hooks/useSelector";
 import style from "./Messages.module.css";
 import {
   actions,
+  addConversationT,
   addMessageT,
   getConversations,
   getCurrentMessagesT,
@@ -15,6 +16,7 @@ import { useForm } from "react-hook-form";
 import Conversation from "./Conversations/Conversation";
 import Message from "./Message/Message";
 import { conversationType } from "../../types";
+import { Button } from "@material-ui/core";
 
 export default function Messages() {
   const user = useSelector((state) => state.authReducer.user);
@@ -38,7 +40,7 @@ export default function Messages() {
 
   useEffect(() => {
     user && dispatch(getConversations(user.id));
-  }, []);
+  }, [user]);
 
   const selectChat = (conv: conversationType) => {
     if (conv.id) {
@@ -66,35 +68,57 @@ export default function Messages() {
       dispatch(addMessageT(data));
     }
   };
+  const addFriend = ({ friendName }: { friendName: string }) => {
+    dispatch(addConversationT(friendName));
+  };
 
   return (
-    <div className={style.messages}>
-      <div className={style.conversations}>
-        {conversations.map((conv) => {
-          return (
-            <div onClick={() => selectChat(conv)}>
-              <Conversation conversation={conv} currentUser={user} />
-            </div>
-          );
-        })}
+    <>
+      <form onSubmit={handleSubmit(addFriend)}>
+        <TextField
+          {...register("friendName", { required: true })}
+          label="Введите имя друга..."
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={style.searchFriend}
+          type="submit"
+        >
+          Найти
+        </Button>
+      </form>
+      <div className={style.messages}>
+        <div className={style.conversations}>
+          {conversations.map((conv) => {
+            return (
+              <div onClick={() => selectChat(conv)}>
+                <Conversation conversation={conv} currentUser={user} />
+              </div>
+            );
+          })}
+        </div>
+        <div className={style.chat}>
+          {currentMessages.map((message) => {
+            return (
+              <Message message={message} isMy={message.senderId === user?.id} />
+            );
+          })}
+          {currentChat && (
+            <form
+              onSubmit={handleSubmit(addMessage)}
+              className={style.addMessage}
+            >
+              <TextField
+                {...register("text", { required: true })}
+                className={style.input}
+                id="standard-basic"
+                label="Новое сообщение..."
+              />
+            </form>
+          )}
+        </div>
       </div>
-      <div className={style.chat}>
-        {currentMessages.map((message) => {
-          return (
-            <Message message={message} isMy={message.senderId === user?.id} />
-          );
-        })}
-        {!!currentMessages.length && (
-          <form onSubmit={handleSubmit(addMessage)}>
-            <TextField
-              {...register("text", { required: true })}
-              className={style.input}
-              id="standard-basic"
-              label="Новое сообщение..."
-            />
-          </form>
-        )}
-      </div>
-    </div>
+    </>
   );
 }

@@ -32,6 +32,11 @@ export default (state = initialState, action: actionType): stateType => {
         ...state,
         conversations: action.conversations,
       };
+    case "ADD_CONVERSATION":
+      return {
+        ...state,
+        conversations: [...state.conversations, action.conversation],
+      };
     default:
       return state;
   }
@@ -45,6 +50,8 @@ export const actions = {
     ({ type: "GET_CONVERSATIONS", conversations } as const),
   setMessage: (message: messageType) =>
     ({ type: "SET_MESSAGE", message } as const),
+  addConversation: (conversation: conversationType) =>
+    ({ type: "ADD_CONVERSATION", conversation } as const),
 };
 
 type actionType = ActionTypes<typeof actions>;
@@ -67,5 +74,12 @@ export const getConversations = (userId: number) => {
   return async (dispatch: Dispatch<actionType>) => {
     const { data } = await conversationAPI.getConversations(userId);
     dispatch(actions.getConversations(data));
+  };
+};
+
+export const addConversationT = (friendName: string) => {
+  return async (dispatch: Dispatch<actionType>) => {
+    const { data } = await conversationAPI.addConversation(friendName);
+    dispatch(actions.addConversation(data));
   };
 };

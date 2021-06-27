@@ -12,4 +12,9 @@ export const conversationAPI = {
   ): Promise<AxiosResponse<conversationType[]>> => {
     return instanse.get(`/?userId=${userId}`);
   },
+  addConversation: (
+    friendName: string
+  ): Promise<AxiosResponse<conversationType>> => {
+    return instanse.post(`/`, { friendName });
+  },
 };
