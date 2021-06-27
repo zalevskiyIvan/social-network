@@ -25,11 +25,9 @@ const actions = {
 
 type actionType = ActionTypes<typeof actions>;
 
-export const getUserById = (usersId: number[]) => {
+export const getUserById = (usersId: number) => {
   return async (dispatch: Dispatch<actionType>) => {
-    const responses = await userAPI.getMany(usersId);
-    responses.map((res) => {
-      dispatch(actions.getUser(res.data));
-    });
+    const res = await userAPI.getMany(usersId);
+    dispatch(actions.getUser(res.data));
   };
 };

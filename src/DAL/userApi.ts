@@ -10,11 +10,11 @@ export const userAPI = {
   getOne: (userId: number): Promise<AxiosResponse<userType>> => {
     return instanse.get(`/?userId=${userId}`);
   },
-  getMany: async (usersId: number[]): Promise<AxiosResponse<userType>[]> => {
-    const promiseList:any = []
-    usersId.forEach(id => promiseList.push(instanse.get(`/?userId=${id}`)))
-    const responses: any = await Promise.all(promiseList)
-    return responses
+  getMany: async (usersId: number): Promise<AxiosResponse<userType>> => {
+    // const promiseList: any = [];
+    // usersId.forEach((id) => promiseList.push(instanse.get(`/?userId=${id}`)));
+    // const responses: any = await Promise.all(promiseList);
+    return instanse.get(`/?userId=${usersId}`);
     // return instanse.get(`/?userId=${userId}`);
   },
 };

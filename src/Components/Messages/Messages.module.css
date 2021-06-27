@@ -1,20 +1,8 @@
-.chat {
-  display: flex;
-  width: 100%;
-}
-.chat ul {
-  list-style-type: none;
-}
-.user_list {
-  text-align: left;
-}
-.user_list li {
-  margin-top: 1%;
-}
 .messages {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
 }
+
 .input {
   margin-left: 6%;
 }

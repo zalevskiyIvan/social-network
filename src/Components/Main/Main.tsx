@@ -10,7 +10,7 @@ import style from "./Main.module.css";
 export default function Main() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.postReducer.posts);
-  const userId = useSelector((state) => state.authReducer.user.id);
+  const userId = useSelector((state) => state.authReducer.user?.id);
 
   useEffect(() => {
     dispatch(getPostsT());

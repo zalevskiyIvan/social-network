@@ -20,7 +20,12 @@ export default (state = initialState, action: actionType): stateType => {
     case "ADD_MESSAGES":
       return {
         ...state,
-        messages: [action.message, ...state.messages],
+        messages: [...state.messages, action.message],
+      };
+    case "SET_MESSAGE":
+      return {
+        ...state,
+        messages: [...state.messages, action.message],
       };
     case "GET_CONVERSATIONS":
       return {
@@ -31,13 +36,15 @@ export default (state = initialState, action: actionType): stateType => {
       return state;
   }
 };
-const actions = {
+export const actions = {
   getCurrentMessages: (messages: messageType[]) =>
     ({ type: "GET_MESSAGES", messages } as const),
   addMessage: (message: messageType) =>
     ({ type: "ADD_MESSAGES", message } as const),
   getConversations: (conversations: conversationType[]) =>
     ({ type: "GET_CONVERSATIONS", conversations } as const),
+  setMessage: (message: messageType) =>
+    ({ type: "SET_MESSAGE", message } as const),
 };
 
 type actionType = ActionTypes<typeof actions>;

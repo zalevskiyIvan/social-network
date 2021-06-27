@@ -1,0 +1,30 @@
+.myMessage,
+.otherMessage {
+  width: 30%;
+}
+.myMessage {
+  margin-left: auto;
+  margin-right: 5%;
+  text-align: right;
+}
+.otherMessage {
+  margin-left: 5%;
+  text-align: left;
+}
+.myMessage div,
+.otherMessage div {
+  text-align: center;
+  border-radius: 10px;
+  padding: 1%;
+}
+.myMessage div {
+  background-color: rgb(70, 115, 199);
+}
+.otherMessage div {
+  background-color: rgb(207, 207, 207);
+}
+.createdAt {
+  font-weight: 100;
+  color: grey;
+  margin-right: 2%;
+}

@@ -5,71 +5,96 @@ import { io } from "socket.io-client";
 import { useSelector } from "../../common/hooks/useSelector";
 import style from "./Messages.module.css";
 import {
+  actions,
   addMessageT,
   getConversations,
   getCurrentMessagesT,
 } from "../../redux/messageReducer";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
-import Conversation from "../Conversations/Conversation";
+import Conversation from "./Conversations/Conversation";
+import Message from "./Message/Message";
+import { conversationType } from "../../types";
 
 export default function Messages() {
   const user = useSelector((state) => state.authReducer.user);
   const conversations = useSelector(
     (state) => state.messageReducer.conversations
   );
+  const [currentChat, setCurrentChat] = useState(
+    null as null | conversationType
+  );
+  const currentMessages = useSelector((state) => state.messageReducer.messages);
 
-  // const currentMessages = useSelector((state) => state.messageReducer.messages);
-
-  // const socket = useRef(io("http://localhost:3001"));
-  const history = useHistory();
+  const socket = io("http://localhost:3001");
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
 
-  // useEffect(() => {
-  //   socket.current.on("getMessage", (data) => {
-  //     console.log(data);
-  //   });
-  // });
+  useEffect(() => {
+    socket.on("getMessage", (data) => {
+      dispatch(actions.setMessage(data));
+    });
+  }, []);
 
   useEffect(() => {
     user && dispatch(getConversations(user.id));
-    // socket.current = io("http://localhost:3001");
+  }, []);
+
+  const selectChat = (conv: conversationType) => {
+    if (conv.id) {
+      dispatch(getCurrentMessagesT(conv.id));
+      setCurrentChat(conv);
+    }
+  };
+  useEffect(() => {
+    socket.emit("addUser", user?.id);
   }, [user]);
 
-  const selectChat = (convId: number) => {
-    dispatch(getCurrentMessagesT(convId));
-  };
-  // useEffect(() => {
-  //   socket.current.emit("addUser", user.id);
-  // }, []);
-
   const addMessage = ({ text }: { text: string }) => {
-    // socket.current.emit("sendMessage", data);
-    // dispatch(addMessageT(data));
-  };
-  const userIds = conversations.flatMap((e) => e.members);
-  // const friendIds = userIds.filter((member: number) => member !== user?.id);
-  // console.log(userIds);
-  return (
-    <div className={style.chat}>
-      <Conversation userIds={userIds} currentUser={user} />
+    if (user && currentChat?.id) {
+      const reciverId = currentChat.members.find(
+        (memberId) => memberId !== user.id
+      );
 
-      {/* <div className={style.messages}>
-        <ul>
-          {currentMessages?.map((message) => {
-            return <li>{message.text}</li>;
-          })}
-        </ul>
-        <form onSubmit={handleSubmit(addMessage)}>
-          <TextField
-            {...register("text", { required: true })}
-            className={style.input}
-            id="standard-basic"
-            label="Standard"
-          />
-        </form>
-      </div> */}
+      const data = { senderId: user.id, conversationId: currentChat?.id, text };
+      socket.emit("sendMessage", {
+        senderId: user.id,
+        reciverId,
+        text,
+      });
+
+      dispatch(addMessageT(data));
+    }
+  };
+
+  return (
+    <div className={style.messages}>
+      <div className={style.conversations}>
+        {conversations.map((conv) => {
+          return (
+            <div onClick={() => selectChat(conv)}>
+              <Conversation conversation={conv} currentUser={user} />
+            </div>
+          );
+        })}
+      </div>
+      <div className={style.chat}>
+        {currentMessages.map((message) => {
+          return (
+            <Message message={message} isMy={message.senderId === user?.id} />
+          );
+        })}
+        {!!currentMessages.length && (
+          <form onSubmit={handleSubmit(addMessage)}>
+            <TextField
+              {...register("text", { required: true })}
+              className={style.input}
+              id="standard-basic"
+              label="Новое сообщение..."
+            />
+          </form>
+        )}
+      </div>
     </div>
   );
 }
